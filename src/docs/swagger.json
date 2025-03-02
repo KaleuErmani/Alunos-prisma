@@ -1,0 +1,571 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Api de alunos",
+      "description": "Sistema de cadastro de alunos Growdev",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000",
+        "description": "Servidor de Desenvolvimento"
+      },
+      {
+        "url": "https://minha-api.onrender.com",
+        "description": "Servidor de Produção (Render)"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Students",
+        "description": "Rotas relacionadas a estudante",
+        "externalDocs": {
+          "description": "Aqui é um link externo",
+          "url": "https://swagger.io"
+        }
+      },
+      {
+        "name": "Login",
+        "description": "Rotas de autenticação"
+      },
+      {
+        "name": "Assessments",
+        "description": "Rotas de avaliação"
+      }
+    ],
+    "paths": {
+      "/students": {
+        "get": {
+          "tags": ["Students"],
+          "description": "Lista todos os estudantes cadastrados",
+          "responses": {
+            "200": {
+              "description": "Sucesso ao listar estudantes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/student"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro genérico do servidor"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Students"],
+          "description": "Cria um novo estudante",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Alisson Carlos"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "alisson@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "senha123"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "F"
+                    },
+                    "age": {
+                      "type": "number",
+                      "example": 34
+                    }
+                  },
+                  "required": ["name", "email", "password", "type"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Aluno cadastrado com sucesso"
+            },
+            "500": {
+              "description": "Erro ao cadastrar aluno"
+            }
+          }
+        }
+      },
+      "/students/{studentId}": {
+        "get": {
+          "tags": ["Students"],
+          "description": "Obtém os dados de um aluno específico",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID do aluno"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Aluno encontrado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/student"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Aluno não encontrado"
+            },
+            "500": {
+              "description": "Erro ao buscar aluno"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Students"],
+          "description": "Atualiza os dados de um aluno",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID do aluno"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Alisson Carlos"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "alisson@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "senha123"
+                    },
+                    "age": {
+                      "type": "number",
+                      "example": 34
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Aluno atualizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/student"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Dados inválidos"
+            },
+            "500": {
+              "description": "Erro ao atualizar aluno"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Students"],
+          "description": "Exclui um aluno",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "ID do aluno"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Aluno excluído com sucesso"
+            },
+            "404": {
+              "description": "Aluno não encontrado"
+            },
+            "500": {
+              "description": "Erro ao excluir aluno"
+            }
+          }
+        }
+      },
+      "/login": {
+        "description": "Rotas de autenticação",
+        "post": {
+          "tags": ["Login"],
+          "description": "Realiza autenticação mediante login com e-mail e senha",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "carla@gmail.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "senha123"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "password"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login realizado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/loginSuccess"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro genérico"
+            }
+          }
+        }
+      },
+      "/students/{studentId}/assessments": {
+        "get": {
+          "tags": ["Assessments"],
+          "description": "Lista avaliações de um estudante",
+          "parameters": [
+            {
+              "name": "studentId",
+              "description": "Id do estudante",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Avaliações listadas com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/assessmentSuccess"
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro genérico"
+            }
+          }
+        },
+        "post": {
+          "tags": ["Assessments"],
+          "description": "Cria uma avaliação para um estudante",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id do estudante"
+            }
+          ],
+          "requestBody": {
+            "description": "Dados para criação da avaliação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assessmentInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Avaliação criada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/assessmentSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Dados inválidos ou aluno não encontrado"
+            },
+            "500": {
+              "description": "Erro ao criar avaliação"
+            }
+          }
+        }
+      },
+      "/students/{studentId}/assessments/{assessmentId}": {
+        "get": {
+          "tags": ["Assessments"],
+          "description": "Exibe uma avaliação de um estudante",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id do estudante"
+            },
+            {
+              "name": "assessmentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id da avaliação"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Avaliação encontrada",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/assessmentSuccess"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Avaliação não encontrada"
+            },
+            "500": {
+              "description": "Erro ao buscar avaliação"
+            }
+          }
+        },
+        "put": {
+          "tags": ["Assessments"],
+          "description": "Atualiza uma avaliação de um estudante",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id do estudante"
+            },
+            {
+              "name": "assessmentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id da avaliação"
+            }
+          ],
+          "requestBody": {
+            "description": "Dados para atualização da avaliação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assessmentInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Avaliação atualizada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/assessmentSuccess"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Dados inválidos"
+            },
+            "500": {
+              "description": "Erro ao atualizar avaliação"
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Assessments"],
+          "description": "Exclui uma avaliação de um estudante",
+          "parameters": [
+            {
+              "name": "studentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id do estudante"
+            },
+            {
+              "name": "assessmentId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Id da avaliação"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Avaliação excluída com sucesso"
+            },
+            "404": {
+              "description": "Avaliação não encontrada"
+            },
+            "500": {
+              "description": "Erro ao excluir avaliação"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "student": {
+          "description": "Interface de modelagem de um estudante",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "d4c5ebf1-b21a-4946-8803-2a615c174713"
+            },
+            "name": {
+              "type": "string",
+              "example": "Jonh Doe"
+            },
+            "email": {
+              "type": "string",
+              "example": "jonh@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "senha123"
+            },
+            "type": {
+              "type": "string",
+              "example": "M"
+            },
+            "age": {
+              "type": "number",
+              "example": 35,
+              "nullable": true
+            }
+          }
+        },
+        "loginSuccess": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "489c3277-a0ea-44ad-9dc3-eafcbfa7e27a"
+            },
+            "token": {
+              "type": "string",
+              "example": "JWT-TOKEN-EXAMPLE"
+            }
+          }
+        },
+        "assessmentInput": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "example": "Prova de Matemática"
+            },
+            "score": {
+              "type": "number",
+              "example": 7
+            },
+            "subject": {
+              "type": "string",
+              "example": "Matemática"
+            }
+          }
+        },
+        "assessmentSuccess": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "234b1c55-1f57-44b6-9279-e063a21ed4f8"
+            },
+            "title": {
+              "type": "string",
+              "example": "Prova de Matemática"
+            },
+            "score": {
+              "type": "number",
+              "example": 7
+            },
+            "subject": {
+              "type": "string",
+              "example": "Matemática"
+            }
+          }
+        }
+      }
+    }
+  }
+  
